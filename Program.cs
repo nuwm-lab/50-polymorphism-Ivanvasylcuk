@@ -1,104 +1,137 @@
 ﻿using System;
+using System.Globalization;
 
-namespace Std
+namespace Geometry
 {
     // 🔹 Базовий клас — півплощина
-    public class Halfplane
+    public class HalfPlane
     {
-        protected double a1, a2, b;
+        // 🔸 Використовуємо приватні поля з підкресленням
+        protected double _a1, _a2, _b;
 
-        public Halfplane() { }
-
-        public Halfplane(double a1, double a2, double b)
+        // 🔸 Властивості (Properties) для доступу
+        public double A1
         {
-            this.a1 = a1;
-            this.a2 = a2;
-            this.b = b;
+            get => _a1;
+            set => _a1 = value;
+        }
+
+        public double A2
+        {
+            get => _a2;
+            set => _a2 = value;
+        }
+
+        public double B
+        {
+            get => _b;
+            set => _b = value;
+        }
+
+        public HalfPlane() { }
+
+        public HalfPlane(double a1, double a2, double b)
+        {
+            _a1 = a1;
+            _a2 = a2;
+            _b = b;
+        }
+
+        // 🔸 Безпечне введення числа з консолі
+        protected double ReadDouble(string message)
+        {
+            double value;
+            Console.Write(message);
+            while (!double.TryParse(Console.ReadLine(), NumberStyles.Float, CultureInfo.InvariantCulture, out value))
+            {
+                Console.Write("❌ Помилка! Введіть коректне число: ");
+            }
+            return value;
         }
 
         // 🔸 Віртуальні методи
         public virtual void SetCoefficients()
         {
-            Console.Write("Введіть a1: ");
-            a1 = double.Parse(Console.ReadLine() ?? "0");
-
-            Console.Write("Введіть a2: ");
-            a2 = double.Parse(Console.ReadLine() ?? "0");
-
-            Console.Write("Введіть b: ");
-            b = double.Parse(Console.ReadLine() ?? "0");
+            _a1 = ReadDouble("Введіть a1: ");
+            _a2 = ReadDouble("Введіть a2: ");
+            _b = ReadDouble("Введіть b: ");
         }
 
         public virtual void PrintCoefficients()
         {
-            Console.WriteLine($"Півплощина: {a1} * x1 + {a2} * x2 <= {b}");
+            Console.WriteLine($"Півплощина: {_a1} * x1 + {_a2} * x2 <= {_b}");
         }
 
         public virtual void CheckPoint()
         {
             Console.WriteLine("\nВведіть координати точки:");
-            Console.Write("x1 = ");
-            double x1 = double.Parse(Console.ReadLine() ?? "0");
-            Console.Write("x2 = ");
-            double x2 = double.Parse(Console.ReadLine() ?? "0");
+            double x1 = ReadDouble("x1 = ");
+            double x2 = ReadDouble("x2 = ");
 
-            double left = a1 * x1 + a2 * x2;
-            if (left <= b)
+            double left = _a1 * x1 + _a2 * x2;
+            if (left <= _b)
                 Console.WriteLine("✅ Точка належить півплощині.");
             else
                 Console.WriteLine("❌ Точка не належить півплощині.");
         }
+
+        // (Необов'язковий деструктор, просто для демонстрації)
+        ~HalfPlane()
+        {
+            // Console.WriteLine("HalfPlane finalized");
+        }
     }
 
-    // 🔹 Похідний клас — півпростір
-    public class Pivprostir : Halfplane
+    // 🔹 Похідний клас — півпростір (3D)
+    public class HalfSpace : HalfPlane
     {
-        private double a3;
+        private double _a3;
 
-        public Pivprostir() { }
+        public double A3
+        {
+            get => _a3;
+            set => _a3 = value;
+        }
 
-        public Pivprostir(double a1, double a2, double a3, double b)
+        public HalfSpace() { }
+
+        public HalfSpace(double a1, double a2, double a3, double b)
             : base(a1, a2, b)
         {
-            this.a3 = a3;
+            _a3 = a3;
         }
 
         // 🔸 Перевизначення віртуальних методів
         public override void SetCoefficients()
         {
-            Console.Write("Введіть a1: ");
-            a1 = double.Parse(Console.ReadLine() ?? "0");
-
-            Console.Write("Введіть a2: ");
-            a2 = double.Parse(Console.ReadLine() ?? "0");
-
-            Console.Write("Введіть a3: ");
-            a3 = double.Parse(Console.ReadLine() ?? "0");
-
-            Console.Write("Введіть b: ");
-            b = double.Parse(Console.ReadLine() ?? "0");
+            _a1 = ReadDouble("Введіть a1: ");
+            _a2 = ReadDouble("Введіть a2: ");
+            _a3 = ReadDouble("Введіть a3: ");
+            _b = ReadDouble("Введіть b: ");
         }
 
         public override void PrintCoefficients()
         {
-            Console.WriteLine($"Півпростір: {a1} * x1 + {a2} * x2 + {a3} * x3 <= {b}");
+            Console.WriteLine($"Півпростір: {_a1} * x1 + {_a2} * x2 + {_a3} * x3 <= {_b}");
         }
 
         public override void CheckPoint()
         {
             Console.WriteLine("\nВведіть координати точки:");
-            Console.Write("x1 = ");
-            double x1 = double.Parse(Console.ReadLine() ?? "0");
-            Console.Write("x2 = ");
-            double x2 = double.Parse(Console.ReadLine() ?? "0");
-            Console.Write("x3 = ");
-            double x3 = double.Parse(Console.ReadLine() ?? "0");
+            double x1 = ReadDouble("x1 = ");
+            double x2 = ReadDouble("x2 = ");
+            double x3 = ReadDouble("x3 = ");
 
-            double left = a1 * x1 + a2 * x2 + a3 * x3;
-            if (left <= b)
+            double left = _a1 * x1 + _a2 * x2 + _a3 * x3;
+            if (left <= _b)
                 Console.WriteLine("✅ Точка належить півпростору.");
             else
                 Console.WriteLine("❌ Точка не належить півпростору.");
+        }
+
+        ~HalfSpace()
+        {
+            // Console.WriteLine("HalfSpace finalized");
         }
     }
 
@@ -107,23 +140,23 @@ namespace Std
     {
         static void Main()
         {
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
             Console.WriteLine("Оберіть об’єкт:\n1 — Півплощина\n2 — Півпростір");
-            int choice = int.Parse(Console.ReadLine() ?? "1");
 
-            // 🔸 Базовий покажчик
-            Halfplane obj;
+            int choice;
+            while (!int.TryParse(Console.ReadLine(), out choice) || (choice != 1 && choice != 2))
+            {
+                Console.Write("❌ Помилка! Введіть 1 або 2: ");
+            }
 
-            if (choice == 1)
-                obj = new Halfplane();
-            else
-                obj = new Pivprostir();
+            // 🔸 Поліморфізм через базовий клас
+            HalfPlane obj = choice == 1 ? new HalfPlane() : new HalfSpace();
 
-            // 🔸 Виклики через базовий клас
             obj.SetCoefficients();
             obj.PrintCoefficients();
             obj.CheckPoint();
 
-            Console.WriteLine("\nПрограма завершена.");
+            Console.WriteLine("\n✅ Програма завершена.");
         }
     }
 }
