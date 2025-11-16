@@ -3,13 +3,10 @@ using System.Globalization;
 
 namespace Geometry
 {
-    // 🔹 Базовий клас — півплощина
     public class HalfPlane
     {
-        // 🔸 Використовуємо приватні поля з підкресленням
         protected double _a1, _a2, _b;
 
-        // 🔸 Властивості (Properties) для доступу
         public double A1
         {
             get => _a1;
@@ -37,19 +34,17 @@ namespace Geometry
             _b = b;
         }
 
-        // 🔸 Безпечне введення числа з консолі
         protected double ReadDouble(string message)
         {
             double value;
             Console.Write(message);
             while (!double.TryParse(Console.ReadLine(), NumberStyles.Float, CultureInfo.InvariantCulture, out value))
             {
-                Console.Write("❌ Помилка! Введіть коректне число: ");
+                Console.Write("Помилка! Введіть коректне число: ");
             }
             return value;
         }
 
-        // 🔸 Віртуальні методи
         public virtual void SetCoefficients()
         {
             _a1 = ReadDouble("Введіть a1: ");
@@ -70,19 +65,13 @@ namespace Geometry
 
             double left = _a1 * x1 + _a2 * x2;
             if (left <= _b)
-                Console.WriteLine("✅ Точка належить півплощині.");
+                Console.WriteLine("Точка належить півплощині.");
             else
-                Console.WriteLine("❌ Точка не належить півплощині.");
+                Console.WriteLine("Точка не належить півплощині.");
         }
 
-        // (Необов'язковий деструктор, просто для демонстрації)
-        ~HalfPlane()
-        {
-            // Console.WriteLine("HalfPlane finalized");
-        }
     }
 
-    // 🔹 Похідний клас — півпростір (3D)
     public class HalfSpace : HalfPlane
     {
         private double _a3;
@@ -101,7 +90,6 @@ namespace Geometry
             _a3 = a3;
         }
 
-        // 🔸 Перевизначення віртуальних методів
         public override void SetCoefficients()
         {
             _a1 = ReadDouble("Введіть a1: ");
@@ -124,18 +112,12 @@ namespace Geometry
 
             double left = _a1 * x1 + _a2 * x2 + _a3 * x3;
             if (left <= _b)
-                Console.WriteLine("✅ Точка належить півпростору.");
+                Console.WriteLine("Точка належить півпростору.");
             else
-                Console.WriteLine("❌ Точка не належить півпростору.");
-        }
-
-        ~HalfSpace()
-        {
-            // Console.WriteLine("HalfSpace finalized");
+                Console.WriteLine("Точка не належить півпростору.");
         }
     }
 
-    // 🔹 Програма для демонстрації динамічного поліморфізму
     class Program
     {
         static void Main()
@@ -146,17 +128,16 @@ namespace Geometry
             int choice;
             while (!int.TryParse(Console.ReadLine(), out choice) || (choice != 1 && choice != 2))
             {
-                Console.Write("❌ Помилка! Введіть 1 або 2: ");
+                Console.Write("Помилка! Введіть 1 або 2: ");
             }
 
-            // 🔸 Поліморфізм через базовий клас
             HalfPlane obj = choice == 1 ? new HalfPlane() : new HalfSpace();
 
             obj.SetCoefficients();
             obj.PrintCoefficients();
             obj.CheckPoint();
 
-            Console.WriteLine("\n✅ Програма завершена.");
+            Console.WriteLine("\nПрограма завершена.");
         }
     }
 }
